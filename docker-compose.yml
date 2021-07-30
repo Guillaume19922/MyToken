@@ -1,0 +1,17 @@
+
+version: '3'
+services:
+  ganachecli:
+    image: trufflesuite/ganache-cli:v6.12.2
+    command: ganache-cli -i 5777 -g 1 -l 0xFA69BFC70 --db /db
+    volumes:
+      - ./db:/db
+    ports:
+      - 8545:8545
+  truffle_simpletests:
+    image: test-mytoken:latest
+    command: ["./wait-for-it.sh", "ganachecli:8545", "--", "./init.sh"]
+    depends_on:
+      - ganachecli
+    ports:
+      - 8888:8888
